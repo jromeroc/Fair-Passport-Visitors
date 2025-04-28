@@ -35,12 +35,12 @@ Este es el **Frontend** de la aplicación **Fair Passport**, diseñada para feri
 ---
 
 ## 📂 Estructura
-*. index.html -> Vista para visitantes 
-*.admin.html -> Panel de administración 
-*.script.js -> Lógica de visitantes 
-*.admin_script.js -> Lógica de administración 
-*.style.css -> Estilos para visitantes 
-*.admin_style.css -> Estilos para administración
+* index.html -> Vista para visitantes 
+* admin.html -> Panel de administración 
+* script.js -> Lógica de visitantes 
+* admin_script.js -> Lógica de administración 
+* style.css -> Estilos para visitantes 
+* admin_style.css -> Estilos para administración
 
 ---
 
