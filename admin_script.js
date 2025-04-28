@@ -181,7 +181,7 @@ dom.createStandForm.addEventListener('submit', async e => {
             body: form
         });
 
-        console.log('Respuesta crear stand:', response); // DEBUG
+        console.log('Respuesta crear stand:', response);
 
         if (response && response.success) {
             showMessage('¡Stand creado exitosamente!');
@@ -241,8 +241,8 @@ function displayVisitorPage() {
     const endIndex = startIndex + VISITORS_PER_PAGE;
     const paginatedVisitors = filteredVisitors.slice(startIndex, endIndex);
 
-    renderVisitors(paginatedVisitors); // Renderizar solo la página actual
-    renderPaginationControls(totalPages); // Actualizar controles
+    renderVisitors(paginatedVisitors);
+    renderPaginationControls(totalPages);
 }
 
 function renderVisitors(visitorsToRender) {
@@ -265,6 +265,7 @@ function renderVisitors(visitorsToRender) {
       `;
         dom.visitorList.appendChild(li);
     });
+
     // Aquí se agrega el listener después de renderizar los botones
     document.querySelectorAll('.show-visits-button').forEach(button => {
         button.addEventListener('click', async (e) => {
@@ -280,7 +281,7 @@ async function showVisitorVisits(visitorCode) {
       if (response && response.success) {
         const visits = response.data;
         console.log(`Visitas de ${visitorCode}:`, visits);
-        // Aquí puedes mostrar las visitas en un modal o alerta
+       
         const visitList = visits.map(v =>
             v.stand && v.stand.name
               ? `- ${v.stand.name} (${new Date(v.visitedAt).toLocaleString('es-CO')})`

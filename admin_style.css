@@ -18,7 +18,7 @@ body {
   color: #0d6efd;
 }
 
-/* Sólo estilos no cubiertos por Bootstrap */
+/* estilos no cubiertos por Bootstrap */
 .list-group-item.fst-italic {
   background: transparent;
   border: none;

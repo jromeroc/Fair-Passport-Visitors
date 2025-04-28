@@ -10,7 +10,7 @@ body {
   display: none !important;
 }
 
-/* Solo estilos extras */
+/* Estilos extras */
 #qr-reader {
   border: 1px solid #eee;
   max-width: 500px;
