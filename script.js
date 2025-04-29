@@ -130,7 +130,7 @@ function stopQrScanner() {
 
 async function recordVisit(visitorCode, standId) {
   try {
-    const res = await fetch(`${BACKEND_URL}/visits`, {
+    const res = await fetch(`${BACKEND_URL}/api/visits`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visitorCode, standId }),
