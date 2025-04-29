@@ -74,25 +74,47 @@ function toggleView(showDashboard) {
     dom.dashboardSection.classList.toggle('d-none', !showDashboard);
 }
 
+// En admin_script.js
 async function handleLogin(event) {
     event.preventDefault();
     const username = dom.loginForm.querySelector('#username').value.trim();
     const password = dom.loginForm.querySelector('#password').value.trim();
 
     try {
-        const res = await fetch(`${BACKEND_URL}/auth/admin/login`, {
+        const res = await fetch(`${BACKEND_URL}/api/auth/admin/login`, { // <-- Añadir /api aquí
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+
+        // --- Inicio: Modificación para depuración ---
+        if (!res.ok) {
+            // Si la respuesta no es OK (ej: 400, 401, 404, 500)
+            // Intenta leer la respuesta como texto para ver el error real del servidor
+            const errorText = await res.text();
+            console.error('Respuesta del servidor (no OK):', errorText); // Muestra la respuesta cruda en consola
+            // Lanza un error con el texto recibido o un mensaje genérico si el texto está vacío
+            throw new Error(errorText || `Error ${res.status}: ${res.statusText}`);
+        }
+        // --- Fin: Modificación para depuración ---
+
+        // Si la respuesta fue OK (ej: 200), intenta parsear como JSON
+        const data = await res.json(); // Si llega aquí, res.ok era true
+
+        // NOTA: Si el backend envía una respuesta OK pero SIN cuerpo JSON válido,
+        // el error de parseo ocurrirá aquí. El console.error anterior no se ejecutará.
+        // En ese caso raro, necesitarías envolver 'await res.json()' en otro try/catch
+        // o revisar la lógica del backend para respuestas 200.
 
         localStorage.setItem('fp_adminToken', data.token);
         showMessage('Login exitoso');
         loadDashboard();
+
     } catch (err) {
+        // Muestra el mensaje de error (que ahora podría ser el texto del servidor)
         showMessage(`Error en login: ${err.message}`, true);
+        // Opcional: También puedes loguear el error completo a la consola
+        console.error('Error completo en handleLogin:', err);
         dom.loginForm.querySelector('#password').value = '';
     }
 }
@@ -118,7 +140,7 @@ async function fetchAndRenderStands() {
       </div>
     </li>`;
     try {
-        const { data } = await fetchWithAuth(`${BACKEND_URL}/admin/stands`);
+        const { data } = await fetchWithAuth(`${BACKEND_URL}/api/admin/stands`);
         renderStands(data);
     } catch (err) {
         dom.standList.innerHTML = `<li class="list-group-item text-danger text-center">${err.message}</li>`;
@@ -176,7 +198,7 @@ dom.createStandForm.addEventListener('submit', async e => {
     if (logoFile) form.append('logoFile', logoFile);
 
     try {
-        const response = await fetchWithAuth(`${BACKEND_URL}/admin/stands`, {
+        const response = await fetchWithAuth(`${BACKEND_URL}/api/admin/stands`, {
             method: 'POST',
             body: form
         });
@@ -204,7 +226,7 @@ async function fetchAndRenderVisitors() {
       </div>
     </li>`;
     try {
-        const { data } = await fetchWithAuth(`${BACKEND_URL}/admin/visitors`);
+        const { data } = await fetchWithAuth(`${BACKEND_URL}/api/admin/visitors`);
         allVisitors = data;
         filteredVisitors = data;
         currentVisitorPage = 1;
@@ -277,7 +299,7 @@ function renderVisitors(visitorsToRender) {
 
 async function showVisitorVisits(visitorCode) {
     try {
-      const response = await fetchWithAuth(`${BACKEND_URL}/admin/visits?visitorCode=${visitorCode}`);
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/admin/visits?visitorCode=${visitorCode}`);
       if (response && response.success) {
         const visits = response.data;
         console.log(`Visitas de ${visitorCode}:`, visits);

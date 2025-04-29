@@ -49,7 +49,7 @@ function showRegistrationView() {
 async function fetchVisitedStands(code) {
   dom.visitedStandsList.innerHTML = '<li class="list-group-item">Consultando...</li>';
   try {
-    const res = await fetch(`${BACKEND_URL}/visits?visitorCode=${code}`);
+    const res = await fetch(`${BACKEND_URL}/api/visits?visitorCode=${code}`);
     if (!res.ok) {
       if (res.status === 409) throw new Error('Ya registraste esta visita.');
       throw new Error('Error del servidor');
@@ -84,7 +84,7 @@ dom.registrationForm.addEventListener('submit', async e => {
   const name = dom.visitorNameInput.value.trim();
   if (!name) return showMessage('Ingresa tu nombre', true);
   try {
-    const res = await fetch(`${BACKEND_URL}/visitors/register`, {
+    const res = await fetch(`${BACKEND_URL}/api/visitors/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name }),
@@ -146,24 +146,6 @@ async function recordVisit(visitorCode, standId) {
   }
 }
 
-try {
-    const response = await fetchWithAuth(`${BACKEND_URL}/admin/stands`, {
-        method: 'POST',
-        body: form
-    });
-
-    console.log('Respuesta crear stand:', response); // << Log para depurar
-
-    if (response && response.success) {
-        showMessage('¡Stand creado exitosamente!');
-        dom.createStandForm.reset();
-        fetchAndRenderStands();
-    } else {
-        throw new Error(response?.message || 'Error inesperado al crear stand.');
-    }
-} catch (err) {
-    showMessage(`Error al crear stand: ${err.message}`, true);
-}
 
 // Inicializar vista
 const savedCode = localStorage.getItem('fp_visitorCode');
